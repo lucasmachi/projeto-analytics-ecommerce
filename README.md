@@ -1,4 +1,4 @@
-# Olist E-commerce Analytics 🚀
+# Olist E-commerce Analytics 
 
 Este projeto foi desenvolvido com o objetivo de analisar o comportamento de compra, faturamento, logística e retenção de clientes da **Olist** (maior integradora de marketplaces do Brasil), utilizando dados reais disponíveis no Kaggle. 
 
@@ -13,7 +13,7 @@ O foco principal do projeto foi integrar uma infraestrutura moderna de dados em 
 
 ---
 
-## 📈 Principais Insights de Negócio Gerados
+##  Principais Insights de Negócio Gerados
 
 1.  **Sazonalidade e Histórico:** Identificação de anomalias no histórico de dados (como o início incompleto da operação no fim de 2016 e quedas pontuais em meados de 2017) contrapostas a uma clara tendência de crescimento no faturamento mensal global.
 2.  **Volume vs. Valor:** A categoria *Cama, Mesa e Banho* lidera disparada em volume físico de pedidos, porém a categoria *Beleza e Saúde* é o verdadeiro motor de faturamento da empresa devido ao maior ticket médio dos produtos.
@@ -23,7 +23,7 @@ O foco principal do projeto foi integrar uma infraestrutura moderna de dados em 
 
 ---
 
-## 📂 Estrutura do Projeto Modular
+##  Estrutura do Projeto Modular
 Para garantir manutenibilidade e clean code, a extração de dados e a geração de gráficos foram separadas em scripts independentes coordenados por um arquivo mestre:
 
 *   `main.py`: Conecta no BigQuery, baixa os DataFrames e orquestra a execução.
