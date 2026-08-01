@@ -1,18 +1,18 @@
-# Olist E-commerce Analytics & Predictive Modeling
+# Olist E-commerce Analytics | Predictive Modeling
 
 Este projeto foi desenvolvido com o objetivo de analisar o comportamento de compra, faturamento, logística, retenção de clientes, eficiência operacional e **previsão de vendas (Machine Learning)** da **Olist** (maior integradora de marketplaces do Brasil), utilizando dados reais disponíveis no Kaggle. 
 
-O foco do projeto abrange desde a infraestrutura de dados em nuvem e validação estatística formal de hipóteses de negócio até a **modelagem preditiva poliglota (Python & R)** utilizando boas práticas de engenharia de software e análise temporal.
+O foco do projeto abrange desde a infraestrutura de dados em nuvem e validação estatística formal de hipóteses de negócio até a **modelagem preditiva poliglota (Python e R)** utilizando boas práticas de engenharia de software e análise temporal.
 
 ---
 
 ## Tecnologias e Infraestrutura
 
 *   **Google Cloud Platform (GCP):** Hospedagem e armazenamento do Data Lakehouse.
-*   **BigQuery:** Manipulação, saneamento e consultas analíticas complexas via SQL.
+*   **BigQuery:** Manipulação, saneamento e consultas analíticas via SQL.
 *   **Python + Pandas:** Conexão direta com a nuvem (via IAM Service Account do GCP), manipulação de dados e engenharia de features.
-*   **R + Tidyverse (`dplyr` & `ggplot2`):** Análise exploratória de dados e visualizações idiomáticas avançadas (Semana 4).
-*   **Machine Learning & Séries Temporais:** `scikit-learn` (Linear Regression, Random Forest) e `prophet` (Meta Data Science) para previsão de faturamento e tendências (Semana 5).
+*   **R + Tidyverse (`dplyr` & `ggplot2`):** Análise exploratória de dados e visualizações idiomáticas avançadas.
+*   **Machine Learning & Séries Temporais:** `scikit-learn` (Linear Regression, Random Forest) e `prophet` (Meta Data Science) para previsão de faturamento e tendências.
 *   **SciPy & Statsmodels:** Aplicação de testes estatísticos paramétricos para validação formal de hipóteses.
 *   **Matplotlib & Seaborn:** Geração de inteligência visual (EDA) modularizada.
 *   **WSL 2 (Ubuntu no Windows):** Ambiente de desenvolvimento focado em padrão de produção Linux.
@@ -29,7 +29,7 @@ O foco do projeto abrange desde a infraestrutura de dados em nuvem e validação
 
 ---
 
-## Validação Estatística de Hipóteses (A/B & Inferência)
+## Validação Estatística de Hipóteses (A/B e Inferência)
 
 Para além da análise descritiva, o projeto aplica testes estatísticos formais para garantir decisões baseadas em evidências:
 
@@ -50,7 +50,7 @@ Como demonstração de versatilidade entre ecossistemas de dados (Python/R), par
 
 ---
 
-## Machine Learning & Previsão de Tendências
+## Machine Learning e Previsão de Tendências
 
 Construção e avaliação de modelos preditivos para estimar o faturamento diário do e-commerce com foco em **curto prazo (operacional)** e **longo prazo (estratégico)**.
 
@@ -75,7 +75,7 @@ Construção e avaliação de modelos preditivos para estimar o faturamento diá
 
 ```text
 ├── main.py                     # Script orquestrador da carga GCP e execução dos plots em Python
-├── eda.R                 # Script em R (dplyr + ggplot2) replicando análises chave
+├── eda.R                       # Script em R (dplyr + ggplot2) replicando análises chave
 ├── ml_sales_prediction.py      # Pipeline completo de ML (Scikit-Learn + Prophet) e métricas
 ├── graficos.py                 # Funções modularizadas para visualização de dados
 ├── teste_hipotese.py           # Aplicação do Teste T de Welch (Ticket Médio)
