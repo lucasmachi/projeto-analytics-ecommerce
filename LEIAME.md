@@ -33,12 +33,13 @@ O foco do projeto abrange desde a infraestrutura de dados em nuvem e validação
 
 Para além da análise descritiva, o projeto aplica testes estatísticos formais para garantir decisões baseadas em evidências:
 
-*   **Diferença de Ticket Médio por Categoria (Teste T de Welch):**
-    *   *Hipótese:* Avaliar se a diferença de gasto médio entre *Beleza e Saúde* e *Cama, Mesa e Banho* é estatisticamente significante.
-    *   *Resultado:* Confirmado com 95% de confiança que a categoria *Beleza e Saúde* gera maior valor financeiro por pedido transacionado.
-*   **Gargalo Logístico Regional (Teste Z de Proporções):**
-    *   *Hipótese:* Comparar a proporção de entregas com atraso entre os dois maiores mercados (SP vs. RJ).
-    *   *Resultado:* O Rio de Janeiro apresenta uma taxa de atraso de **13,47%** contra apenas **5,89%** de São Paulo, provando uma falha logística estrutural no estado do RJ.
+### Preço médio por item e categoria — teste t de Welch
+
+- **Pergunta:** o preço médio por item difere entre Beleza e Saúde e Cama, Mesa e Banho?
+- **Método:** teste t de Welch bilateral, comparando preços por item sem assumir variâncias populacionais iguais.
+- **Resultado relatado anteriormente:** diferença estatisticamente significativa ao nível de 5%, com maior média amostral em Beleza e Saúde.
+- **Escopo:** a consulta compara preços individuais dos itens, não valores totais por pedido, e não filtra os pedidos pelo status de entrega.
+- **Limitação:** o teste pressupõe observações independentes. Itens do mesmo pedido ou anúncios repetidos podem violar essa condição.
 
 ---
 
@@ -78,7 +79,7 @@ Construção e avaliação de modelos preditivos para estimar o faturamento diá
 ├── eda.R                       # Script em R (dplyr + ggplot2) replicando análises chave
 ├── ml_sales_prediction.py      # Pipeline completo de ML (Scikit-Learn + Prophet) e métricas
 ├── graficos.py                 # Funções modularizadas para visualização de dados
-├── teste_hipotese.py           # Aplicação do Teste T de Welch (Ticket Médio)
+├── teste_hipotese.py           # Aplicação do Teste T de Welch (preços médios por item)
 ├── teste_ab_logistica.py       # Aplicação do Teste Z de Proporções (Atrasos SP vs RJ)
 ├── comparativo_modelos.png     # Gráfico comparativo dos 3 modelos de ML
 ├── sazonalidade_faturamento.png
