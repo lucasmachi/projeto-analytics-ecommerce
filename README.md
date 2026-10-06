@@ -33,11 +33,13 @@ The workflow combines cloud-based data processing, SQL analysis, statistical hyp
 
 The project goes beyond descriptive analysis by comparing groups within historical transaction data. These are observational comparisons, not randomized A/B experiments.
 
-### Average Order Value by Category — Welch's t-test
+### Average Item Price by Category — Welch's t-test
 
-- **Question:** does average spending per order differ between Health & Beauty and Bed, Bath & Table?
-- **Method:** Welch's t-test for comparing means.
-- **Reported result:** a statistically significant difference at the 5% significance level, with higher average spending in Health & Beauty.
+- **Question:** does the average item price differ between Health & Beauty and Bed, Bath & Table?
+- **Method:** a two-sided Welch's t-test comparing item prices without assuming equal population variances.
+- **Previously reported result:** a statistically significant difference at the 5% significance level, with a higher sample mean in Health & Beauty.
+- **Scope:** the query compares individual item prices, not total order values, and does not filter orders by delivery status.
+- **Limitation:** the test assumes independent observations. Items from the same order or repeated product listings may violate this assumption.
 
 ### Delivery Delays by State — Two-proportion z-test
 
@@ -96,7 +98,7 @@ These metrics measure the size of errors, not whether the models consistently ov
 ├── eda.R                        # Exploratory analysis in R
 ├── ml_sales_prediction.py       # Predictive models and performance evaluation
 ├── graficos.py                  # Modular visualization functions
-├── teste_hipotese.py             # Welch's t-test for average order value
+├── teste_hipotese.py             # Welch's t-test for average item prices
 ├── teste_ab_logistica.py         # Two-proportion z-test for SP vs. RJ delays
 ├── comparativo_modelos.png       # Model comparison chart
 ├── sazonalidade_faturamento.png
