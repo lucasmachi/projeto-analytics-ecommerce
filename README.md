@@ -82,12 +82,11 @@ The following metrics measure prediction errors for daily revenue during the 60-
 
 These metrics measure the size of errors, not whether the models consistently overpredict or underpredict. They are not percentage errors or the total error accumulated over 60 days.
 
-### Modeling Insights
-
-1. Linear Regression with lag-based features achieved the lowest MAE and RMSE in the evaluated period, demonstrating the value of a simple baseline.
-2. Random Forest produced similar results but did not outperform Linear Regression on either reported metric.
-3. Prophet provides interpretable trend and seasonality components. The reported analysis identified weekly peaks on Mondays and Tuesdays, but the results above do not establish superior performance for annual forecasts.
-4. A 60-day test period is not necessarily a 60-day-ahead forecast. Performance at specific horizons, such as 7, 15, or 365 days, requires a corresponding evaluation that accounts for which lag values would be available when each prediction is made.
+1. Linear Regression recorded the lowest MAE and RMSE in the implemented evaluation, followed by Random Forest.
+2. Linear Regression and Random Forest used lag features and rolling averages derived from observed revenue, including earlier days within the test period. This represents daily predictions with updated historical observations, without retraining the models.
+3. Prophet generated forecasts for the entire 60-day test period from a single cutoff, without incorporating actual revenue observed during that period.
+4. The models therefore used different information during evaluation. Their errors describe these specific setups, rather than an equivalent comparison of forecasting algorithms.
+5. A fair comparison requires the same forecast horizon and information availability for every model, using either daily one-step-ahead predictions or a fixed multi-day forecast.
 
 ## Project Structure
 
