@@ -66,9 +66,11 @@ Construção e avaliação de modelos preditivos para estimar o faturamento diá
 | **Random Forest** | Árvores | R$ 5.206,60 | R$ 6.796,30 | Bom desempenho, mas propenso a pequenas oscilações em séries temporais médias. |
 | **Prophet (Meta)** | Série Temporal | R$ 8.743,44 | R$ 11.183,64 | **Visão estratégica de longo prazo** (decomposição de tendência, sazonalidade e efeito de feriados). |
 
-### Insights da Modelagem
-1.  Modelos lineares baseados em *lags* recentes superaram abordagens mais complexas para a previsão diária imediata.
-2.  O Prophet destaca-se pela transparência na decomposição da série, identificando picos semanais (segunda/terça-feira) e sazonais. Melhor utilizado para previsões anuais.
+1. A Regressão Linear apresentou os menores valores de MAE e RMSE na avaliação implementada, seguida pelo Random Forest.
+2. A Regressão Linear e o Random Forest utilizaram defasagens e médias móveis calculadas com faturamentos reais, incluindo dias anteriores dentro do período de teste. Isso representa previsões diárias com atualização das observações históricas, sem retreinamento dos modelos.
+3. O Prophet gerou previsões para os 60 dias de teste a partir de um único ponto de corte, sem incorporar o faturamento real observado durante esse período.
+4. Os modelos, portanto, utilizaram informações diferentes na avaliação. Seus erros descrevem essas configurações específicas, e não uma comparação equivalente entre algoritmos de previsão.
+5. Uma comparação justa exige o mesmo horizonte de previsão e as mesmas informações disponíveis para todos os modelos, usando previsões diárias de um passo à frente ou uma previsão fixa de vários dias.
 
 ---
 
