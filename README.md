@@ -1,6 +1,6 @@
 # Olist E-commerce Analytics | Predictive Modeling
 
-[Leia em Português (Brasil)](./README.pt-BR.md)
+[Leia em Português (Brasil)](./LEIAME.md)
 
 This project explores revenue, purchasing behavior, logistics, customer retention, and sales forecasting using publicly available Olist e-commerce data from Kaggle.
 
