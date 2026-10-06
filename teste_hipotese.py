@@ -1,16 +1,14 @@
-<<<<<<< HEAD
 import os
 import pandas as pd
 from scipy import stats
 from google.cloud import bigquery
 
-
-#Conexão e carregamento dos dados
+# Conexão e carregamento dos dados
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/mnt/c/Users/lucas/OneDrive/Desktop/Lucas/estudos 2026/projeto ecommerce/projeto-olist-analytics-b00a9d7606ef.json"
 client = bigquery.Client(project="projeto-olist-analytics")
 
 query = """
-SELECT 
+SELECT
     i.price,
     p.product_category_name
 FROM `analytics_olist.itens` i
@@ -21,78 +19,85 @@ WHERE p.product_category_name IN ('cama_mesa_banho', 'beleza_saude')
 print("Baixando dados para o teste estatístico...")
 df = client.query(query).to_dataframe()
 
-#Separando duas amostras
-cama_mesa = df[df['product_category_name'] == 'cama_mesa_banho']['price']
-beleza_saude = df[df['product_category_name'] == 'beleza_saude']['price']
+# Garantir preços numéricos e remover valores ausentes
+df['price'] = pd.to_numeric(df['price'], errors='coerce')
+df = df.dropna(subset=['price'])
 
-#Métricas descritivas
-print(f"\nResumo Amostral")
-print(f"Cama, Mesa e Banho -> Média: R$ {cama_mesa.mean():.2f} | Total Itens: {len(cama_mesa)}")
-print(f"Beleza e Saúde     -> Média: R$ {beleza_saude.mean():.2f} | Total Itens: {len(beleza_saude)}")
+# Separando duas amostras de preços por item
+cama_mesa = df.loc[
+    df['product_category_name'] == 'cama_mesa_banho',
+    'price'
+]
 
-#Aplicação do Teste T de Welch (equal_var=False para não presumir variâncias iguais)
-stat, p_valor = stats.ttest_ind(cama_mesa, beleza_saude, equal_var=False)
+beleza_saude = df.loc[
+    df['product_category_name'] == 'beleza_saude',
+    'price'
+]
 
-print(f"\nResultado do Teste T")
-print(f"Estatística T: {stat:.4f}")
-print(f"p-valor: {p_valor}")
+if len(cama_mesa) < 2 or len(beleza_saude) < 2:
+    raise ValueError(
+        "Cada categoria precisa ter pelo menos dois itens com preços válidos."
+    )
 
-print("Hipótese nula (H0): A diferença estatística entre os tickets médios das categorias sugere acaso amostral (> 5%)")
-print("Hipótese alternativa (H1): A diferença estatística entre os tickets médios das categorias segue o padrão de mercado (≤ 5%)")
+# Métricas descritivas
+print("\nResumo amostral — preço por item")
+print(
+    f"Cama, Mesa e Banho -> Média: R$ {cama_mesa.mean():.2f}"
+    f" | Total de itens: {len(cama_mesa)}"
+)
+print(
+    f"Beleza e Saúde -> Média: R$ {beleza_saude.mean():.2f}"
+    f" | Total de itens: {len(beleza_saude)}"
+)
 
-#Conclusão
-if p_valor < 0.05:
-    print("\nRejeitamos H0 - Hipótese alternativa aceita")
-    print("Existe uma diferença estatisticamente significativa no ticket médio das duas categorias.")
+# Hipóteses do teste bilateral
+print("\nH0: as médias populacionais de preço por item são iguais.")
+print("H1: as médias populacionais de preço por item são diferentes.")
+
+# Teste t de Welch, sem assumir variâncias iguais
+stat, p_valor = stats.ttest_ind(
+    cama_mesa,
+    beleza_saude,
+    equal_var=False,
+    alternative='two-sided'
+)
+
+print("\nResultado do teste t de Welch")
+print(f"Estatística t: {stat:.4f}")
+print(f"p-valor: {p_valor:.6g}")
+
+# Conclusão com nível de significância de 5%
+alpha = 0.05
+
+if pd.isna(p_valor):
+    print(
+        "\nNão foi possível obter um resultado válido. "
+        "Verifique a variabilidade e os valores das amostras."
+    )
+elif p_valor < alpha:
+    print("\nRejeitamos H0 ao nível de significância de 5%.")
+    print(
+        "O teste indica uma diferença estatisticamente significativa "
+        "no preço médio por item entre as categorias."
+    )
+
+    if beleza_saude.mean() > cama_mesa.mean():
+        print("Na amostra, Beleza e Saúde apresenta a maior média.")
+    else:
+        print("Na amostra, Cama, Mesa e Banho apresenta a maior média.")
 else:
-    print("\nRejeitamos H1 - Hipótese nula aceita")
-=======
-import os
-import pandas as pd
-from scipy import stats
-from google.cloud import bigquery
+    print("\nNão rejeitamos H0 ao nível de significância de 5%.")
+    print(
+        "Não há evidência estatística suficiente para concluir "
+        "que os preços médios por item diferem entre as categorias."
+    )
 
-
-#Conexão e carregamento dos dados
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/mnt/c/Users/lucas/OneDrive/Desktop/Lucas/estudos 2026/projeto ecommerce/projeto-olist-analytics-b00a9d7606ef.json"
-client = bigquery.Client(project="projeto-olist-analytics")
-
-query = """
-SELECT 
-    i.price,
-    p.product_category_name
-FROM `analytics_olist.itens` i
-JOIN `analytics_olist.produtos` p ON i.product_id = p.product_id
-WHERE p.product_category_name IN ('cama_mesa_banho', 'beleza_saude')
-"""
-
-print("Baixando dados para o teste estatístico...")
-df = client.query(query).to_dataframe()
-
-#Separando duas amostras
-cama_mesa = df[df['product_category_name'] == 'cama_mesa_banho']['price']
-beleza_saude = df[df['product_category_name'] == 'beleza_saude']['price']
-
-#Métricas descritivas
-print(f"\nResumo Amostral")
-print(f"Cama, Mesa e Banho -> Média: R$ {cama_mesa.mean():.2f} | Total Itens: {len(cama_mesa)}")
-print(f"Beleza e Saúde     -> Média: R$ {beleza_saude.mean():.2f} | Total Itens: {len(beleza_saude)}")
-
-#Aplicação do Teste T de Welch (equal_var=False para não presumir variâncias iguais)
-stat, p_valor = stats.ttest_ind(cama_mesa, beleza_saude, equal_var=False)
-
-print(f"\nResultado do Teste T")
-print(f"Estatística T: {stat:.4f}")
-print(f"p-valor: {p_valor}")
-
-print("Hipótese nula (H0): A diferença estatística entre os tickets médios das categorias sugere acaso amostral (> 5%)")
-print("Hipótese alternativa (H1): A diferença estatística entre os tickets médios das categorias segue o padrão de mercado (≤ 5%)")
-
-#Conclusão
-if p_valor < 0.05:
-    print("\nRejeitamos H0 - Hipótese alternativa aceita")
-    print("Existe uma diferença estatisticamente significativa no ticket médio das duas categorias.")
-else:
-    print("\nRejeitamos H1 - Hipótese nula aceita")
->>>>>>> 6070dae4c48dada854a8569c1569a7de1c89f499
-    print("A diferença observada pode ser apenas fruto do acaso na amostragem.")
+# Limites da interpretação
+print(
+    "\nObservação: esta análise compara preços por item, "
+    "não o valor total de cada pedido."
+)
+print(
+    "O teste pressupõe observações independentes. Itens do mesmo pedido "
+    "ou anúncios repetidos podem apresentar dependência."
+)
