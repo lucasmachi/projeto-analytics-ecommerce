@@ -1,87 +1,114 @@
 # Olist E-commerce Analytics | Predictive Modeling
 
-Este projeto foi desenvolvido com o objetivo de analisar o comportamento de compra, faturamento, logística, retenção de clientes, eficiência operacional e **previsão de vendas (Machine Learning)** da **Olist** (maior integradora de marketplaces do Brasil), utilizando dados reais disponíveis no Kaggle. 
+[Leia em Português (Brasil)](./README.pt-BR.md)
 
-O foco do projeto abrange desde a infraestrutura de dados em nuvem e validação estatística formal de hipóteses de negócio até a **modelagem preditiva poliglota (Python e R)** utilizando boas práticas de engenharia de software e análise temporal.
+This project explores revenue, purchasing behavior, logistics, customer retention, and sales forecasting using publicly available Olist e-commerce data from Kaggle.
 
----
-
-## Tecnologias e Infraestrutura
-
-*   **Google Cloud Platform (GCP):** Hospedagem e armazenamento do Data Lakehouse.
-*   **BigQuery:** Manipulação, saneamento e consultas analíticas via SQL.
-*   **Python + Pandas:** Conexão direta com a nuvem (via IAM Service Account do GCP), manipulação de dados e engenharia de features.
-*   **R + Tidyverse (`dplyr` & `ggplot2`):** Análise exploratória de dados e visualizações idiomáticas avançadas.
-*   **Machine Learning & Séries Temporais:** `scikit-learn` (Linear Regression, Random Forest) e `prophet` (Meta Data Science) para previsão de faturamento e tendências.
-*   **SciPy & Statsmodels:** Aplicação de testes estatísticos paramétricos para validação formal de hipóteses.
-*   **Matplotlib & Seaborn:** Geração de inteligência visual (EDA) modularizada.
-*   **WSL 2 (Ubuntu no Windows):** Ambiente de desenvolvimento focado em padrão de produção Linux.
+The workflow combines cloud-based data processing, SQL analysis, statistical hypothesis testing, and predictive modeling in Python and R. Its goal is to turn historical transaction data into insights that support commercial and operational decisions.
 
 ---
 
-## Principais Insights de Negócio Gerados
+## Technologies and Infrastructure
 
-1.  **Sazonalidade e Histórico:** Identificação de anomalias no histórico de dados contrapostas a uma clara tendência de crescimento no faturamento mensal global.
-2.  **Volume vs. Valor:** A categoria *Cama, Mesa e Banho* lidera disparada em volume físico de pedidos, porém a categoria *Beleza e Saúde* é o verdadeiro motor de faturamento devido ao maior ticket médio.
-3.  **Geomarketing & Logística:** Consumidores do Norte/Nordeste (ex: Paraíba) possuem os maiores tickets médios por pedido, indicando propensão a inflar carrinhos para otimizar o frete.
-4.  **Concentração de Mercado:** Através de *Window Functions* no SQL, identificou-se que o estado de SP concentra sozinho **37%** do faturamento total, com a região Sudeste representando mais de 50% de todas as transações.
-5.  **Retenção Crítica (Churn):** Análise via função `LAG()` revelou um modelo predominantemente *one-time buyer* (apenas ~3.000 recompras em 100k pedidos), com janela média de recomposição de **79 dias**.
+- **Google Cloud Platform (GCP):** cloud data storage and infrastructure.
+- **BigQuery and SQL:** data cleaning, analytical queries, aggregations, and window functions.
+- **Python and Pandas:** GCP integration through an IAM service account, data manipulation, and feature engineering.
+- **R and Tidyverse (`dplyr` and `ggplot2`):** exploratory data analysis and visualization.
+- **lubridate:** date handling and time-based aggregation in R.
+- **scikit-learn:** Linear Regression and Random Forest models.
+- **Prophet:** time series modeling, trend analysis, and seasonality decomposition.
+- **SciPy and Statsmodels:** statistical hypothesis testing.
+- **Matplotlib and Seaborn:** modular data visualization.
+- **WSL 2 with Ubuntu:** Linux development environment on Windows.
 
----
+## Key Business Insights
 
-## Validação Estatística de Hipóteses (A/B e Inferência)
+1. **Revenue trends:** the analysis identified growth in monthly revenue alongside unusual patterns in the historical data that require attention to data coverage and quality.
+2. **Volume versus value:** Bed, Bath & Table leads in order volume, while Health & Beauty leads in revenue in the reported analysis, with a higher average order value.
+3. **Geography and purchasing behavior:** states in the North and Northeast, such as Paraíba, show high average order values. Larger baskets as a way to offset shipping costs are a possible explanation to investigate, rather than a demonstrated customer motivation.
+4. **Market concentration:** SQL window functions showed that São Paulo accounts for approximately **37% of total revenue**, while the Southeast represents more than **50% of transactions**.
+5. **Repeat purchases:** analysis using `LAG()` identified approximately **3,000 repeat purchases across 100,000 orders**, with an average interval of **79 days** between repeat purchases. This suggests limited repeat purchasing within the observed period; it is not, by itself, a churn rate.
 
-Para além da análise descritiva, o projeto aplica testes estatísticos formais para garantir decisões baseadas em evidências:
+## Statistical Hypothesis Testing
 
-*   **Diferença de Ticket Médio por Categoria (Teste T de Welch):**
-    *   *Hipótese:* Avaliar se a diferença de gasto médio entre *Beleza e Saúde* e *Cama, Mesa e Banho* é estatisticamente significante.
-    *   *Resultado:* Confirmado com 95% de confiança que a categoria *Beleza e Saúde* gera maior valor financeiro por pedido transacionado.
-*   **Gargalo Logístico Regional (Teste Z de Proporções):**
-    *   *Hipótese:* Comparar a proporção de entregas com atraso entre os dois maiores mercados (SP vs. RJ).
-    *   *Resultado:* O Rio de Janeiro apresenta uma taxa de atraso de **13,47%** contra apenas **5,89%** de São Paulo, provando uma falha logística estrutural no estado do RJ.
+The project goes beyond descriptive analysis by comparing groups within historical transaction data. These are observational comparisons, not randomized A/B experiments.
 
----
+### Average Order Value by Category — Welch's t-test
 
-## Análise Exploratória de Dados em R (`dplyr` + `ggplot2`)
+- **Question:** does average spending per order differ between Health & Beauty and Bed, Bath & Table?
+- **Method:** Welch's t-test for comparing means.
+- **Reported result:** a statistically significant difference at the 5% significance level, with higher average spending in Health & Beauty.
 
-Como demonstração de versatilidade entre ecossistemas de dados (Python/R), parte da análise exploratória foi replicada em **R**:
-*   Utilização do operador pipe (`%>%`) e `lubridate` para tratamento e agregação de séries temporais.
-*   Geração de gráficos customizados de faturamento mensal e top categorias de produtos utilizando `ggplot2`.
+### Delivery Delays by State — Two-proportion z-test
 
----
+- **Question:** do late-delivery rates differ between São Paulo and Rio de Janeiro?
+- **Method:** a z-test comparing two proportions.
+- **Observed rates:** **13.47% in Rio de Janeiro** versus **5.89% in São Paulo**, a difference of **7.58 percentage points**.
+- **Interpretation:** the observed difference highlights an opportunity to investigate logistics in Rio de Janeiro. This comparison alone does not establish the causes of delays or prove a structural logistics failure.
 
-## Machine Learning e Previsão de Tendências
+## Exploratory Data Analysis in R
 
-Construção e avaliação de modelos preditivos para estimar o faturamento diário do e-commerce com foco em **curto prazo (operacional)** e **longo prazo (estratégico)**.
+Selected analyses were replicated in R to explore the same business questions across the Python and R ecosystems:
 
-### Feature Engineering & Estratégia de Validação
-*   **Agregação Diária:** Construção de série temporal diária sem lacunas (`asfreq('D')`).
-*   **Engenharia de Lags:** Criação de variáveis temporais ($t-1$, $t-7$, $t-14$) e Médias Móveis (7 e 14 dias) com `shift(1)` rigoroso para prevenção de *Data Leakage*.
-*   **Divisão Temporal:** Avaliação nos últimos 60 dias do histórico (respeitando a linha do tempo, sem embaralhamento aleatório).
+- Data transformation and aggregation with `dplyr` and the pipe operator (`%>%`).
+- Date handling and time series aggregation with `lubridate`.
+- Customized monthly revenue and top-category charts with `ggplot2`.
 
-### Comparativo de Desempenho dos Modelos
+## Machine Learning and Revenue Forecasting
 
-| **Regressão Linear** | Tabular / Baseline | **R$ 5.163,81** | **R$ 6.476,80** | **Melhor modelo para curto prazo** (planejamento operacional de estoque/caixa em 7–15 dias). |
-| **Random Forest** | Árvores | R$ 5.206,60 | R$ 6.796,30 | Bom desempenho, mas propenso a pequenas oscilações em séries temporais médias. |
-| **Prophet (Meta)** | Série Temporal | R$ 8.743,44 | R$ 11.183,64 | **Visão estratégica de longo prazo** (decomposição de tendência, sazonalidade e efeito de feriados). |
+The project compares predictive models for daily e-commerce revenue using historical sales and time-based features.
 
-### Insights da Modelagem
-1.  Modelos lineares baseados em *lags* recentes superaram abordagens mais complexas para a previsão diária imediata.
-2.  O Prophet destaca-se pela transparência na decomposição da série, identificando picos semanais (segunda/terça-feira) e sazonais. Melhor utilizado para previsões anuais.
+### Feature Engineering and Validation
 
----
+- **Daily frequency:** the time series is organized with `asfreq('D')`. Missing dates become explicit; handling missing values requires considering the dataset's coverage.
+- **Lag features:** revenue values from 1, 7, and 14 days earlier.
+- **Rolling averages:** 7-day and 14-day windows shifted with `shift(1)` to prevent the target day's revenue from entering its own predictors.
+- **Temporal split:** evaluation on the final **60 days** of the historical dataset, preserving chronological order without random shuffling.
 
-## Estrutura do Projeto
+### Model Performance
+
+The following metrics measure prediction errors for daily revenue during the 60-day test period. Both are expressed in Brazilian reais (BRL); lower values indicate smaller errors.
+
+| Model | Approach | MAE (BRL) | RMSE (BRL) | Evaluation result |
+| --- | --- | ---: | ---: | --- |
+| **Linear Regression** | Tabular baseline | **5,163.81** | **6,476.80** | Lowest errors among the evaluated models. |
+| **Random Forest** | Tree ensemble | 5,206.60 | 6,796.30 | Performance close to Linear Regression. |
+| **Prophet** | Time series model | 8,743.44 | 11,183.64 | Higher errors over the evaluated period. |
+
+- **MAE (Mean Absolute Error):** the average absolute difference between predicted and actual daily revenue. For Linear Regression, predictions differed from actual revenue by BRL 5,163.81 per day on average during the test period.
+- **RMSE (Root Mean Squared Error):** a measure of error that gives greater weight to large deviations. It remains in the same unit as revenue.
+
+These metrics measure the size of errors, not whether the models consistently overpredict or underpredict. They are not percentage errors or the total error accumulated over 60 days.
+
+### Modeling Insights
+
+1. Linear Regression with lag-based features achieved the lowest MAE and RMSE in the evaluated period, demonstrating the value of a simple baseline.
+2. Random Forest produced similar results but did not outperform Linear Regression on either reported metric.
+3. Prophet provides interpretable trend and seasonality components. The reported analysis identified weekly peaks on Mondays and Tuesdays, but the results above do not establish superior performance for annual forecasts.
+4. A 60-day test period is not necessarily a 60-day-ahead forecast. Performance at specific horizons, such as 7, 15, or 365 days, requires a corresponding evaluation that accounts for which lag values would be available when each prediction is made.
+
+## Project Structure
 
 ```text
-├── main.py                     # Script orquestrador da carga GCP e execução dos plots em Python
-├── eda.R                       # Script em R (dplyr + ggplot2) replicando análises chave
-├── ml_sales_prediction.py      # Pipeline completo de ML (Scikit-Learn + Prophet) e métricas
-├── graficos.py                 # Funções modularizadas para visualização de dados
-├── teste_hipotese.py           # Aplicação do Teste T de Welch (Ticket Médio)
-├── teste_ab_logistica.py       # Aplicação do Teste Z de Proporções (Atrasos SP vs RJ)
-├── comparativo_modelos.png     # Gráfico comparativo dos 3 modelos de ML
+├── README.md                    # Main documentation in English
+├── LEIAME.md                    # Documentation in Brazilian Portuguese
+├── main.py                      # GCP integration and Python chart orchestration
+├── eda.R                        # Exploratory analysis in R
+├── ml_sales_prediction.py       # Predictive models and performance evaluation
+├── graficos.py                  # Modular visualization functions
+├── teste_hipotese.py             # Welch's t-test for average order value
+├── teste_ab_logistica.py         # Two-proportion z-test for SP vs. RJ delays
+├── comparativo_modelos.png       # Model comparison chart
 ├── sazonalidade_faturamento.png
 ├── ticket_medio_por_estado.png
 ├── correlacao_preco_frete.png
-└── .gitignore                  # Proteção de credenciais GCP e datasets pesados
+└── .gitignore                   # Excludes credentials and local data files
+```
+
+## Scope and Limitations
+
+The findings describe the historical dataset and the period analyzed, rather than Olist's current operations.
+
+Differences across states and categories may reflect factors such as order composition, delivery distance, and seller profiles. Statistical comparisons can help assess differences between groups but do not establish causality on their own.
+
+Using the forecasts for inventory or cash-flow planning requires validation at the intended forecast horizon and ongoing monitoring of prediction errors.
